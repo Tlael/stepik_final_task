@@ -22,3 +22,5 @@ def test_login_page(browser):
     page = LoginPage(browser, link)
     page.open()
     page.should_be_login_page()
+
+
