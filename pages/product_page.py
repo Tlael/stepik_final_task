@@ -1,9 +1,5 @@
 import math
-
-import pytest
 from selenium.common.exceptions import NoAlertPresentException
-from selenium.webdriver.common.by import By
-
 from pages.base_page import BasePage
 from pages.locators import CartPageLocators, BasketLocators
 
@@ -45,9 +41,9 @@ class ProductPage(BasePage):
     def check_product_price(self, priceToCompare, price_in_cart):
         assert price_in_cart == priceToCompare, "FAIL"
 
-    # def should_not_be_success_message(self):
-    #     assert self.is_not_element_present(*CartPageLocators.SUCCESS_MESSAGE), \
-    #         "Success message is presented, but should not be"
+    def should_not_be_success_message(self):
+        assert self.is_not_element_present(*CartPageLocators.SUCCESS_MESSAGE), \
+            "Success message is presented, but should not be"
     #
     # def success_message_should_disappear(self):
     #     assert self.is_disappeared(*CartPageLocators.SUCCESS_MESSAGE), \
@@ -72,3 +68,7 @@ class ProductPage(BasePage):
     def test_empty_cart_text(self):
         assert self.browser.find_element(*BasketLocators.EMPTY_CART_TEXT), \
             "Cart is not empty"
+
+    def add_item_to_cart(self):
+        addButton = self.browser.find_element(*CartPageLocators.ADD_TO_CART_BUTTON)
+        addButton.click()
