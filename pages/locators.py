@@ -12,8 +12,8 @@ class LoginPageLocators:
 
 class CartPageLocators:
     SUCCESS_MESSAGE = (By.CSS_SELECTOR, "#messages div")
-    CART_LINK = (By.CSS_SELECTOR, '#default > header > div.page_inner > div > div.basket-mini.pull-right.hidden-xs > '
-                                  'span > a')
+    CART_LINK = (By.CSS_SELECTOR,
+                 '#default > header > div.page_inner > div > div.basket-mini.pull-right.hidden-xs > span > a')
     BOOK_NAME = (By.CSS_SELECTOR, ".product_page h1")
     BOOK_TO_COMPARE = (By.CSS_SELECTOR, "div.alertinner strong")
     BOOK_PRICE = (By.CSS_SELECTOR, ".alert-info .alertinner strong")
@@ -30,3 +30,10 @@ class BasePageLocators:
 class BasketLocators:
     EMPTY_CART = (By.CSS_SELECTOR, "#content_inner > div.basket-title.hidden-xs > div")
     EMPTY_CART_TEXT = (By.CSS_SELECTOR, "#content_inner > p")
+
+
+class LinksLocators:
+    LOGIN_PAGE = "http://selenium1py.pythonanywhere.com/ru/accounts/login/"
+    MAIN_PAGE = "http://selenium1py.pythonanywhere.com/"
+    PROMO_PAGE = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+    PRODUCT_PAGE = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"

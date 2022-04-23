@@ -1,25 +1,39 @@
 import time
 import pytest
 
-from pages.login_page import LoginPage
-from pages.product_page import ProductPage
+from pages.locators import LinksLocators
+from .pages.login_page import LoginPage
+from .pages.product_page import ProductPage
 
 
-# @pytest.mark.parametrize('link', ["http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer0",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer1",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer2",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer3",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer4",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer5",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer6",
-#                                   pytest.param("http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
-#                                                "/?promo=offer7", marks=pytest.mark.xfail),
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer8",
-#                                   "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer9"])
-class TestUserAddToBasketFromProductPage():
+class TestGuestAddToBasketFromProductPage:
+    def test_guest_cant_see_success_message(self, browser):
+        link = LinksLocators.PRODUCT_PAGE
+        page = ProductPage(browser, link)
+        page.open()
+        page.test_guest_cant_see_success_message()
+
+    @pytest.mark.need_review
+    def test_guest_can_add_product_to_basket(self, browser):
+        link = LinksLocators.PRODUCT_PAGE
+        page = ProductPage(browser, link)
+        page.open()
+        page.go_to_cart()
+        page.solve_quiz_and_get_code()
+        priceToCompare = page.find_price()
+        price_in_cart = page.find_price_in_cart()
+        bookToCompare = page.find_book_name()
+        book_in_cart = page.find_book_in_cart()
+        page.check_product_name(bookToCompare, book_in_cart)
+        page.check_product_price(priceToCompare, price_in_cart)
+        time.sleep(5)
+
+
+@pytest.mark.logged_user
+class TestUserAddToBasketFromProductPage:
     @pytest.fixture(scope="function", autouse=True)
     def setup(self, browser):
-        link = "http://selenium1py.pythonanywhere.com/ru/accounts/login/"
+        link = LinksLocators.LOGIN_PAGE
         self.browser = browser
         page = LoginPage(browser, link)
         page.open()
@@ -28,16 +42,16 @@ class TestUserAddToBasketFromProductPage():
         page.should_be_authorized_user()
 
     def test_user_cant_see_success_message(self, browser):
-        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+        link = LinksLocators.PROMO_PAGE
         page = ProductPage(browser, link)
         page.open()
         page.should_not_be_success_message()
 
+    @pytest.mark.need_review
     def test_user_can_add_product_to_basket(self, browser):
-        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=newYear2019"
+        link = LinksLocators.PROMO_PAGE
         page = ProductPage(browser, link)
         page.open()
-        # page.should_not_be_success_message()
         page.add_item_to_cart()
         page.solve_quiz_and_get_code()
         priceToCompare = page.find_price()
@@ -46,12 +60,12 @@ class TestUserAddToBasketFromProductPage():
         book_in_cart = page.find_book_in_cart()
         page.check_product_name(bookToCompare, book_in_cart)
         page.check_product_price(priceToCompare, price_in_cart)
-        # page.success_message_should_disappear()
         time.sleep(5)
+
 
 @pytest.mark.xfail
 def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    link = LinksLocators.PRODUCT_PAGE
     page = ProductPage(browser, link)
     page.open()
     page.go_to_cart()
@@ -61,7 +75,7 @@ def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
 
 @pytest.mark.xfail
 def test_message_disappeared_after_adding_product_to_basket(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    link = LinksLocators.PRODUCT_PAGE
     page = ProductPage(browser, link)
     page.open()
     page.go_to_cart()
@@ -70,47 +84,25 @@ def test_message_disappeared_after_adding_product_to_basket(browser):
 
 
 def test_guest_should_see_login_link_on_product_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-city-and-the-stars_95/"
+    link = LinksLocators.PRODUCT_PAGE
     page = ProductPage(browser, link)
     page.open()
     page.should_be_login_link()
 
 
+@pytest.mark.need_review
 def test_guest_can_go_to_login_page_from_product_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/"
+    link = LinksLocators.MAIN_PAGE
     page = ProductPage(browser, link)
     page.open()
     page.should_be_login_link()
 
 
+@pytest.mark.need_review
 def test_guest_cant_see_product_in_basket_opened_from_product_page(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
+    link = LinksLocators.PRODUCT_PAGE
     page = ProductPage(browser, link)
     page.open()
     page.go_to_cart()
     page.test_empty_cart()
     page.test_empty_cart_text()
-
-
-class TestGuestAddToBasketFromProductPage():
-    def test_guest_cant_see_success_message(self, browser):
-        link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207"
-        page = ProductPage(browser, link)
-        page.open()
-        page.test_guest_cant_see_success_message()
-
-    def test_guest_can_add_product_to_basket(self, browser, link):
-        page = ProductPage(browser, link)
-        page.open()
-        # page.should_not_be_success_message()
-        page.go_to_cart()
-        page.solve_quiz_and_get_code()
-        priceToCompare = page.find_price()
-        price_in_cart = page.find_price_in_cart()
-        bookToCompare = page.find_book_name()
-        book_in_cart = page.find_book_in_cart()
-        page.check_product_name(bookToCompare, book_in_cart)
-        page.check_product_price(priceToCompare, price_in_cart)
-        # page.success_message_should_disappear()
-        time.sleep(5)
-
