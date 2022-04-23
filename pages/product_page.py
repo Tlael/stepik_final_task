@@ -5,7 +5,7 @@ from selenium.common.exceptions import NoAlertPresentException
 from selenium.webdriver.common.by import By
 
 from pages.base_page import BasePage
-from pages.locators import CartPageLocators
+from pages.locators import CartPageLocators, BasketLocators
 
 
 class ProductPage(BasePage):
@@ -64,3 +64,11 @@ class ProductPage(BasePage):
     def test_message_disappeared_after_adding_product_to_basket(self):
         assert self.is_disappeared(*CartPageLocators.SUCCESS_MESSAGE), \
             "Success message is presented, but should not be"
+
+    def test_empty_cart(self):
+        assert self.is_not_element_present(*BasketLocators.EMPTY_CART), \
+            "Cart is not empty"
+
+    def test_empty_cart_text(self):
+        assert self.browser.find_element(*BasketLocators.EMPTY_CART_TEXT), \
+            "Cart is not empty"
